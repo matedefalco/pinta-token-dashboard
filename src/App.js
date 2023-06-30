@@ -5,8 +5,8 @@ import { ColorModeSwitcher } from './ColorModeSwitcher';
 import contractABI from './contractABI';
 
 const contractAddress = '0x9Ae69fDfF2FA97e34B680752D8E70dfD529Ea6ca';
-const alchemyAPIKey = 'b383710d86db413d8e6909a08b807754';
-const providerURL = `https://mainnet.infura.io/v3/${alchemyAPIKey}`;
+const infuraAPIKey = 'b383710d86db413d8e6909a08b807754';
+const providerURL = `https://mainnet.infura.io/v3/${infuraAPIKey}`;
 
 async function getWallets() {
   const web3 = new Web3(providerURL);
