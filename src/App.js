@@ -5,8 +5,7 @@ import { ColorModeSwitcher } from './ColorModeSwitcher';
 import contractABI from './contractABI';
 
 const contractAddress = '0x9Ae69fDfF2FA97e34B680752D8E70dfD529Ea6ca';
-const infuraAPIKey = 'b383710d86db413d8e6909a08b807754';
-const providerURL = `https://mainnet.infura.io/v3/${infuraAPIKey}`;
+const providerURL = `https://polygon-mainnet.infura.io/v3/b383710d86db413d8e6909a08b807754`;
 
 async function getWallets() {
   const web3 = new Web3(providerURL);
@@ -17,7 +16,7 @@ async function getWallets() {
   // Obtén la lista de wallets que interactúan con el contrato
   const walletList = await contract.getPastEvents('allEvents', {
     fromBlock: 0,
-    toBlock: 'latest',
+    toBlock: 5,
   });
 
   return walletList.map((event) => event.returnValues.from);
