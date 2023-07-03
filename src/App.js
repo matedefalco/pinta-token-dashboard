@@ -3,6 +3,7 @@ import { ChakraProvider, Box, Grid, theme, Text } from '@chakra-ui/react';
 import Web3 from 'web3';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import contractABI from './contractABI';
+import { ethers } from "ethers";
 
 // Dirección del contrato en la red de Polygon
 const contractAddress = '0x9Ae69fDfF2FA97e34B680752D8E70dfD529Ea6ca';
@@ -11,21 +12,17 @@ const contractAddress = '0x9Ae69fDfF2FA97e34B680752D8E70dfD529Ea6ca';
 const providerURL = `https://polygon-mainnet.g.alchemy.com/v2/OQmRfTFI5vVbN6oYc39XAkvB6FiW8hFa`;
 
 // Crear una instancia de Web3 utilizando el proveedor de Infura
-const web3 = new Web3(providerURL);
+const provider = new ethers.providers.JsonRpcProvider(providerURL);
 
 async function getWallets() {
 
-  // Obtener la instancia del contrato utilizando el ABI y la dirección del contrato
-  const contract = new web3.eth.Contract(contractABI, contractAddress);
+  // The Contract object
+const pntContract = new ethers.Contract(contractAddress, contractABI, provider);
 
-  // Obtener la lista de wallets que interactúan con el contrato
-  const walletList = await contract.getPastEvents('allEvents', {
-    fromBlock: 0,
-    toBlock: 5,
-  });
 
-  // Extraer las direcciones de las wallets de los eventos pasados
-  return walletList.map((event) => event.returnValues.from);
+  const balance = await provider.getBalance(contractAddress)
+
+ return balance;
 }
 
 function App() {
