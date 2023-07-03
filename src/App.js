@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChakraProvider, Box, Grid, theme, Text, Tag, Heading, Input, Button, Stack } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { ChakraProvider, Box, Grid, theme, Text, Tag, Heading, Input, Button, Stack, Flex } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import contractABI from './contractABI';
 import { ethers } from 'ethers';
@@ -8,29 +8,30 @@ const providerURL = 'https://polygon-mainnet.g.alchemy.com/v2/OQmRfTFI5vVbN6oYc3
 const provider = new ethers.JsonRpcProvider(providerURL);
 
 function App() {
-  const [balance, setBalance] = useState(null);
   const [wallet, setWallet] = useState('');
   const [contract, setContract] = useState('');
+  const [balance, setBalance] = useState(null);
+  const [symbol, setSymbol] = useState('');
 
   async function getBalance() {
-    if (!contract || !wallet) return;
+    if (contract === '' || wallet === '') return;
+    console.log('Suka', wallet);
+    console.log('Suka', contract);
 
     try {
       const tokenContract = new ethers.Contract(contract, contractABI, provider);
       const walletBalance = Number(await tokenContract.balanceOf(wallet));
+      const contractTicker = await tokenContract.symbol();
       setBalance(walletBalance);
+      setSymbol(contractTicker);
       console.log('Suka', walletBalance);
     } catch (error) {
       console.error(error);
     }
   }
-    
 
   function handleButtonClick() {
     getBalance();
-    console.log('Suka', wallet);
-    console.log('Suka', contract);
-    console.log('Suka', balance);
   }
 
   return (
@@ -48,12 +49,12 @@ function App() {
         <Stack spacing={2} p={8}>
           <Input placeholder="Wallet" onChange={(e) => setWallet(e.target.value)} />
           <Input placeholder="Token Contract" onChange={(e) => setContract(e.target.value)} />
+          <Button onClick={handleButtonClick}>Confirm</Button>
         </Stack>
-        <Button onClick={handleButtonClick}>Confirm</Button>
         {balance !== null && (
-          <Tag>{balance}</Tag>
-        )}
-      </Box>
+            <Tag mt={4}>{balance} {symbol}</Tag>
+          )}
+        </Box>
     </ChakraProvider>
   );
 }
