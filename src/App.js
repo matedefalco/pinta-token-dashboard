@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ChakraProvider, Box, Grid, theme, Text, Tag, Heading, Input, Button, Stack, Flex } from '@chakra-ui/react';
+import { ChakraProvider, Box, Grid, theme, Text, Tag, Heading, Input, Button, Stack, Flex, Alert, AlertIcon } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import contractABI from './contractABI';
 import { ethers } from 'ethers';
@@ -12,11 +12,13 @@ function App() {
   const [contract, setContract] = useState('');
   const [balance, setBalance] = useState(null);
   const [symbol, setSymbol] = useState('');
+  const [error, setError] = useState('');
 
   async function getBalance() {
-    if (contract === '' || wallet === '') return;
-    console.log('Suka', wallet);
-    console.log('Suka', contract);
+    if (contract === '' || wallet === '') {
+      setError('Please fill in both the wallet and contract fields.');
+      return;
+    }
 
     try {
       const tokenContract = new ethers.Contract(contract, contractABI, provider);
@@ -24,8 +26,9 @@ function App() {
       const contractTicker = await tokenContract.symbol();
       setBalance(walletBalance);
       setSymbol(contractTicker);
-      console.log('Suka', walletBalance);
+      setError('');
     } catch (error) {
+      setError('Invalid contract or wallet address.');
       console.error(error);
     }
   }
@@ -51,10 +54,16 @@ function App() {
           <Input placeholder="Token Contract" onChange={(e) => setContract(e.target.value)} />
           <Button onClick={handleButtonClick}>Confirm</Button>
         </Stack>
-        {balance !== null && (
-            <Tag mt={4}>{balance} {symbol}</Tag>
-          )}
-        </Box>
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            {error}
+          </Alert>
+        )}
+        {balance !== null && !error && (
+          <Tag mt={4}>{balance} {symbol}</Tag>
+        )}
+      </Box>
     </ChakraProvider>
   );
 }
