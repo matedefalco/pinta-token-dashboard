@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ChakraProvider, Box, Grid, theme, Text, Tag, Heading, Input, Button, Stack, Flex, Alert, AlertIcon } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { ChakraProvider, Box, Grid, theme, Text, Tag, Heading, Input, Button, Stack, Alert, AlertIcon } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import contractABI from './contractABI';
 import { ethers } from 'ethers';
